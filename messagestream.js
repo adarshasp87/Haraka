@@ -22,7 +22,7 @@ class MessageStream extends Stream {
         this.end_called = false;
         this.end_callback = null;
         this.buffered = 0;
-		this.total_buffered = 0;
+	this.total_buffered = 0;
         this._queue = [];
         this.max_data_inflight = 0;
         this.buffer_max = (!isNaN(cfg.main.spool_after) ?
@@ -106,9 +106,6 @@ class MessageStream extends Stream {
             this.idx.body.end = this.bytes_read;
         }
         this.end_called = true;
-		//console.log("ADARSh add_line_end is called this.spooling="+this.spooling +" this._queue.length="+this._queue.length +" this.total_buffered ="+this.total_buffered);
-
-		
         if (cb && typeof cb === 'function') {
             this.end_callback = cb;
         }
@@ -124,7 +121,7 @@ class MessageStream extends Stream {
         const self = this;
         if (data) {
             this.buffered += data.length;
-			this.total_buffered += data.length;
+	    this.total_buffered += data.length;
             this._queue.push(data);
         }
         // Stats
@@ -141,10 +138,6 @@ class MessageStream extends Stream {
         // Have we completely finished writing all data?
         if (this.end_called && (!this.spooling || (this.spooling && !this._queue.length))) {
             if (this.end_callback) this.end_callback();
-			// console.log("ADARSH---> Have we completely finished writing all data? this.end_called"+this.end_called);
-			 //console.log("ADARSH---> Have we completely finished writing all data? this.spooling "+this.spooling);
-			 //console.log("ADARSH---> Have we completely finished writing all data? this._queue.length "+this._queue.length);
-			 
             // Do we have any waiting readers?
             if (this.listeners('data').length && !this.write_complete) {
                 this.write_complete = true;
@@ -199,19 +192,10 @@ class MessageStream extends Stream {
             return false;
         }
         else {
-			
-
             if (this.end_called && (!this.spooling || (this.spooling && !this._queue.length))) {
                 return self._write();
             }
-			else
-			{
-			// console.log("ADARSH---> END return true is called this.end_called"+this.end_called);
-			 //console.log("ADARSH---> END return true is called this.spooling "+this.spooling);
-			 //console.log("ADARSH---> END return true is called this._queue.length "+this._queue.length);
-			 
             return true;
-			}
         }
     }
 
